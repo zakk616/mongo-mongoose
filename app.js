@@ -1,29 +1,9 @@
 //jshint esversion:6
 
 const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/fruitsDB", {
+mongoose.connect("mongodb://127.0.0.1:27017/peopleDB", {
   useNewUrlParser: true,
 });
-
-// create a schema for our fruits
-const fruitSchema = new mongoose.Schema({
-  name: String,
-  rating: Number,
-  review: String,
-});
-
-// create a model for fruits
-const Fruit = mongoose.model("Fruit", fruitSchema);
-
-// create a new fruit
-const fruit = new Fruit({
-  name: "Apple",
-  rating: 7.5,
-  review: "Delicious",
-});
-
-// save the fruit
-//fruit.save();
 
 // create a schema for our people
 const personSchema = new mongoose.Schema({
@@ -41,7 +21,7 @@ const p1 = new Person({
 });
 
 const p2 = new Person({
-  name: "Ahmed",
+  name: "Ali Ahmed",
   age: 15,
 });
 
@@ -51,22 +31,47 @@ const p3 = new Person({
 });
 
 // save the people
-// Person.insertMany([p1, p2, p3], function (err) {
-//   if (err) {
-//     console.log(err);
-//   } else {
-//     console.log("Successfully saved people!");
-//   }
-// });
-
-// show all people
-Person.find({}, function (err, people) {
+Person.insertMany([p1, p2, p3], function (err) {
   if (err) {
     console.log(err);
   } else {
-    people.forEach((person) => {
-      console.log(person.name);
-    });
-    mongoose.connection.close();
+    console.log("Successfully saved people!");
+    showPeople();
   }
 });
+
+// show all people
+function showPeople() {
+  Person.find({}, function (err, people) {
+    if (err) {
+      console.log(err);
+    } else {
+      people.forEach((person) => {
+        console.log(person.name);
+      });
+    }
+  });
+}
+
+// update a person
+Person.updateOne({ name: "Ali Ahmed" }, { name: "Ali" }, function (err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Successfully updated people!");
+    showPeople();
+  }
+});
+
+
+// delete a person
+Person.deleteOne({ name: "Ali" }, function (err) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log("Successfully deleted Person!");
+    showPeople();
+  }
+});
+
+// mongoose.connection.close();
